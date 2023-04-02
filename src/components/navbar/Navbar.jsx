@@ -1,9 +1,21 @@
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthProvider';
+import { toast } from 'react-hot-toast';
 
 const Navbar = () => {
-    const { user } = useContext(AuthContext);
+    const { user, logOut } = useContext(AuthContext);
+    // console.log(user);
+
+    const signOutHandler = () => {
+        logOut()
+            .then(result => {
+                toast.success("Sign Out successfully")
+            })
+            .then(err => {
+                console.log(err);
+            })
+    }
 
     return (
         <div className="navbar bg-base-100">
@@ -48,7 +60,7 @@ const Navbar = () => {
                     {
                         user?.uid &&
                         <li className='mx-2'>
-                            <button className='btn btn-sm border-2 border-orange-500 text-white py-1'>
+                            <button onClick={signOutHandler} className='btn btn-sm border-2 border-orange-500 text-white py-1'>
                                 Sign out
                             </button>
                         </li>

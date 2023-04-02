@@ -2,6 +2,7 @@ import axios from "axios";
 import { createContext, useEffect, useState } from "react";
 import { RouterProvider } from "react-router-dom";
 import { routes } from "./router/routes";
+import { Toaster } from "react-hot-toast";
 
 export const DataContext = createContext()
 
@@ -21,6 +22,7 @@ function App() {
     <div>
       <DataContext.Provider value={dataInfo}>
         <RouterProvider router={routes} />
+        <Toaster></Toaster>
       </DataContext.Provider>
     </div>
   );
