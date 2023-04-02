@@ -21,7 +21,28 @@ const SignIn = () => {
             .then(result => {
                 setError("")
                 navigate(from)
-                toast.success("Sign in successfully")
+                const user = result?.user;
+                const userEmail = {
+                    email: user?.email
+                };
+                fetch("http://localhost:5000/getToken", {
+                    method: "POST",
+                    headers: {
+                        "content-type": "application/json"
+                    },
+                    body: JSON.stringify(userEmail)
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data?.success) {
+                            const token = data?.token;
+                            localStorage.setItem("Countriesist", token)
+                            toast.success(data?.message)
+                        } else {
+                            console.log(data);
+                            toast.error(data?.message)
+                        }
+                    })
             })
             .then(error => {
                 setError(error)
@@ -32,8 +53,46 @@ const SignIn = () => {
         signInWithGoogle()
             .then(result => {
                 setError("")
-                console.log(result);
-                navigate(from)
+                const user = result?.user
+                const userData = {
+                    name: user?.displayName,
+                    email: user?.email
+                }
+                const userEmail = {
+                    email: user?.email
+                }
+                fetch("http://localhost:5000/addUser", {
+                    method: 'POST',
+                    headers: {
+                        'content-type': 'application/json',
+                    },
+                    body: JSON.stringify(userData)
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data?.success) {
+                            navigate(from)
+                            fetch("http://localhost:5000/getToken", {
+                                method: "POST",
+                                headers: {
+                                    "content-type": "application/json"
+                                },
+                                body: JSON.stringify(userEmail)
+                            })
+                                .then(res => res.json())
+                                .then(data => {
+                                    if (data?.success) {
+                                        const token = data?.token;
+                                        localStorage.setItem("Countriesist", token)
+                                    } else {
+                                        console.log(data);
+                                        toast.error(data?.message)
+                                    }
+                                })
+                        } else {
+                            toast.error(data?.message)
+                        }
+                    })
             })
             .then(error => {
                 console.log(error);

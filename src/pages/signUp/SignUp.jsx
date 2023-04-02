@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react';
 import { AuthContext } from '../../context/AuthProvider';
 import { useForm } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { toast } from 'react-hot-toast';
 
 const SignUp = () => {
     const { createUser, updateUserProfile } = useContext(AuthContext);
@@ -20,9 +21,52 @@ const SignUp = () => {
         createUser(email, password)
             .then(result => {
                 setError("")
+                const user = result?.user
+                const userData = {
+                    name,
+                    email: user?.email
+                }
+                const userEmail = {
+                    email: user?.email
+                }
                 updateUserProfile(userInfo)
                     .then(result => {
                         navigate(from)
+
+
+                        fetch("http://localhost:5000/addUser", {
+                            method: 'POST',
+                            headers: {
+                                'content-type': 'application/json',
+                            },
+                            body: JSON.stringify(userData)
+                        })
+                            .then(res => res.json())
+                            .then(data => {
+                                if (data?.success) {
+                                    navigate(from)
+                                    fetch("http://localhost:5000/getToken", {
+                                        method: "POST",
+                                        headers: {
+                                            "content-type": "application/json"
+                                        },
+                                        body: JSON.stringify(userEmail)
+                                    })
+                                        .then(res => res.json())
+                                        .then(data => {
+                                            if (data?.success) {
+                                                const token = data?.token;
+                                                localStorage.setItem("Countriesist", token)
+                                                toast.success(data?.message)
+                                            } else {
+                                                console.log(data);
+                                                toast.error(data?.message)
+                                            }
+                                        })
+                                } else {
+                                    toast.error(data?.message)
+                                }
+                            })
                     })
                     .then(error => {
                         setError(error?.message)
