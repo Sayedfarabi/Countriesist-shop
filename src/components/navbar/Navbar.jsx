@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
+import { AuthContext } from '../../context/AuthProvider';
 
 const Navbar = () => {
+    const { user } = useContext(AuthContext);
+
     return (
         <div className="navbar bg-base-100">
             <div className="navbar-start">
@@ -11,17 +14,45 @@ const Navbar = () => {
                     </label>
                     <ul tabIndex={0} className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
                         <li className='mx-2'><Link to={"/"}>Home</Link></li>
-                        <li className='mx-2'><Link to={"/signIn"}>Sign in</Link></li>
-                        <li className='mx-2'><Link to={"/signUp"}>Sign up</Link></li>
+                        {
+                            !user?.uid &&
+                            <li className='mx-2'><Link to={"/signIn"}>Sign in</Link></li>
+                        }
+                        {
+                            !user?.uid &&
+                            <li className='mx-2'><Link to={"/signUp"}>Sign up</Link></li>
+                        }
+                        {
+                            user?.uid &&
+                            <li className='mx-2'>
+                                <button className='btn btn-sm border-2 border-orange-500 text-white py-1'>
+                                    Sign out
+                                </button>
+                            </li>
+                        }
                     </ul>
                 </div>
                 <Link to={"/"} className="btn btn-ghost normal-case text-xl"><span>Countriesist</span><span>Shop</span></Link>
             </div>
             <div className="navbar-end hidden lg:flex">
-                <ul className="menu menu-horizontal px-1">
+                <ul className="menu menu-horizontal px-1 flex justify-center items-center">
                     <li className='mx-2'><Link to={"/"}>Home</Link></li>
-                    <li className='mx-2'><Link to={"/signIn"}>Sign in</Link></li>
-                    <li className='mx-2'><Link to={"/signUp"}>Sign up</Link></li>
+                    {
+                        !user?.uid &&
+                        <li className='mx-2'><Link to={"/signIn"}>Sign in</Link></li>
+                    }
+                    {
+                        !user?.uid &&
+                        <li className='mx-2'><Link to={"/signUp"}>Sign up</Link></li>
+                    }
+                    {
+                        user?.uid &&
+                        <li className='mx-2'>
+                            <button className='btn btn-sm border-2 border-orange-500 text-white py-1'>
+                                Sign out
+                            </button>
+                        </li>
+                    }
                 </ul>
             </div>
         </div>
