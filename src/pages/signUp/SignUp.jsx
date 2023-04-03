@@ -3,15 +3,16 @@ import { AuthContext } from '../../context/AuthProvider';
 import { useForm } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
+import Loading from '../../components/loading/Loading';
 
 const SignUp = () => {
-    const { createUser, updateUserProfile } = useContext(AuthContext);
+    const { createUser, updateUserProfile, loading } = useContext(AuthContext);
     const [error, setError] = useState();
     const location = useLocation();
     const from = location.state?.from?.pathname || '/';
     const navigate = useNavigate();
 
-    const { register, handleSubmit, formState: { errors }, resetField } = useForm();
+    const { register, handleSubmit, formState: { errors } } = useForm();
 
     const submitHandle = (data) => {
         const { name, email, password } = data;
@@ -21,6 +22,7 @@ const SignUp = () => {
         createUser(email, password)
             .then(result => {
                 setError("")
+                navigate(from)
                 const user = result?.user
                 const userData = {
                     name,
@@ -31,9 +33,6 @@ const SignUp = () => {
                 }
                 updateUserProfile(userInfo)
                     .then(result => {
-                        navigate(from)
-
-
                         fetch("http://localhost:5000/addUser", {
                             method: 'POST',
                             headers: {
@@ -44,7 +43,7 @@ const SignUp = () => {
                             .then(res => res.json())
                             .then(data => {
                                 if (data?.success) {
-                                    navigate(from)
+
                                     fetch("http://localhost:5000/getToken", {
                                         method: "POST",
                                         headers: {
@@ -76,6 +75,10 @@ const SignUp = () => {
                 setError(error)
             })
         console.log(data);
+    }
+
+    if (loading) {
+        return <Loading></Loading>
     }
 
     return (

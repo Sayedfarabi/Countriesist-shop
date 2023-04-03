@@ -1,13 +1,14 @@
 import React, { useContext, useState } from 'react';
 import { AuthContext } from '../../context/AuthProvider';
 import { useForm } from 'react-hook-form';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
+import Loading from '../../components/loading/Loading';
 
 
 const SignIn = () => {
-    const { signIn, signInWithGoogle } = useContext(AuthContext);
-    const { register, handleSubmit, formState: { errors }, resetField } = useForm()
+    const { signIn, signInWithGoogle, loading } = useContext(AuthContext);
+    const { register, handleSubmit, formState: { errors } } = useForm()
     const [error, setError] = useState()
     const location = useLocation();
     const from = location.state?.from?.pathname || '/';
@@ -38,6 +39,7 @@ const SignIn = () => {
                             const token = data?.token;
                             localStorage.setItem("Countriesist", token)
                             toast.success(data?.message)
+
                         } else {
                             console.log(data);
                             toast.error(data?.message)
@@ -47,12 +49,15 @@ const SignIn = () => {
             .then(error => {
                 setError(error)
             })
+
+
     }
 
     const googleHandler = () => {
         signInWithGoogle()
             .then(result => {
                 setError("")
+                navigate(from)
                 const user = result?.user
                 const userData = {
                     name: user?.displayName,
@@ -71,7 +76,7 @@ const SignIn = () => {
                     .then(res => res.json())
                     .then(data => {
                         if (data?.success) {
-                            navigate(from)
+
                             fetch("http://localhost:5000/getToken", {
                                 method: "POST",
                                 headers: {
@@ -84,6 +89,7 @@ const SignIn = () => {
                                     if (data?.success) {
                                         const token = data?.token;
                                         localStorage.setItem("Countriesist", token)
+
                                     } else {
                                         console.log(data);
                                         toast.error(data?.message)
@@ -100,6 +106,9 @@ const SignIn = () => {
             })
     }
 
+    if (loading) {
+        return <Loading></Loading>
+    }
     return (
         <section>
             <div>
@@ -141,6 +150,10 @@ const SignIn = () => {
 
                                         <div className="form-control mt-6">
                                             <input type="submit" value="Sign In" className='btn btn-md btn-primary' />
+                                        </div>
+
+                                        <div className="form-control mt-6 text-center">
+                                            <p>Haven't your an account? Please <span className='underline text-blue-500'><Link to={"/signUp"}>Sign up</Link></span></p>
                                         </div>
 
                                     </form>

@@ -10,7 +10,7 @@ const Root = () => {
             <section>
                 <Navbar></Navbar>
             </section>
-            <section className='min-h-[85vh]'>
+            <section className='min-h-[85vh] bg-slate-200'>
                 <Outlet></Outlet>
             </section>
             <section>

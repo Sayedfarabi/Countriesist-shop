@@ -1,5 +1,4 @@
-import axios from "axios";
-import { createContext, useEffect, useState } from "react";
+import { createContext } from "react";
 import { RouterProvider } from "react-router-dom";
 import { routes } from "./router/routes";
 import { Toaster } from "react-hot-toast";
@@ -7,23 +6,10 @@ import { Toaster } from "react-hot-toast";
 export const DataContext = createContext()
 
 function App() {
-  const [countries, setCountries] = useState([])
-
-
-  useEffect(() => {
-    axios.get("https://restcountries.com/v3.1/all")
-      .then(data => setCountries(data?.data))
-  }, [])
-
-  const dataInfo = {
-    countries
-  }
   return (
-    <div>
-      <DataContext.Provider value={dataInfo}>
-        <RouterProvider router={routes} />
-        <Toaster></Toaster>
-      </DataContext.Provider>
+    <div className='max-w-[1440px] mx-auto'>
+      <RouterProvider router={routes} />
+      <Toaster></Toaster>
     </div>
   );
 }
