@@ -26,7 +26,7 @@ const SignIn = () => {
                 const userEmail = {
                     email: user?.email
                 };
-                fetch("http://localhost:5000/getToken", {
+                fetch("https://countriesist-server.vercel.app/getToken", {
                     method: "POST",
                     headers: {
                         "content-type": "application/json"
@@ -66,7 +66,7 @@ const SignIn = () => {
                 const userEmail = {
                     email: user?.email
                 }
-                fetch("http://localhost:5000/addUser", {
+                fetch("https://countriesist-server.vercel.app/addUser", {
                     method: 'POST',
                     headers: {
                         'content-type': 'application/json',
@@ -77,7 +77,7 @@ const SignIn = () => {
                     .then(data => {
                         if (data?.success) {
 
-                            fetch("http://localhost:5000/getToken", {
+                            fetch("https://countriesist-server.vercel.app/getToken", {
                                 method: "POST",
                                 headers: {
                                     "content-type": "application/json"

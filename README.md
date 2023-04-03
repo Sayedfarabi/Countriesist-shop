@@ -1,5 +1,5 @@
-* Live Link : 
-* Server Side Link : 
+* Live Link : https://countriesist-shop.web.app
+* Server Side Link : https://countriesist-server.vercel.app/
 
 Project Feature :
 • This is a responsive website.

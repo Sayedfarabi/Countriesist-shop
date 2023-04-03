@@ -1,19 +1,18 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import Card from '../../../components/card/Card';
-import { DataContext } from '../../../App';
 import { useFetch } from '../../../hooks/useFetch';
 import Loading from '../../../components/loading/Loading';
 
 const Countries = () => {
     const { data: countries, error, fetchLoading } = useFetch("https://restcountries.com/v3.1/all");
-    // const { countries } = useContext(DataContext)
+
     const [pageNumber, setPageNumber] = useState(1)
     const dataShow = 12;
     const length = countries?.length;
     const pages = Math.ceil(length / dataShow);
     const [limitCountries, setLimitCountries] = useState([])
 
-    console.log(countries);
+
 
     const previousHandle = () => {
         const currentPage = pageNumber - 1;
